@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="videos/aboutmebackground.mp4" type="video/mp4">
+    </video>
+    <div class="content">
+        <h2 style="text-align: left;">
+            <span id="aboutmecontent">
+                <span class="typing-text"></span>
+            </span>
+        </h2>
+        <div class="simple-dot" id="simpleDot"></div>
+    </div>
+
+    <script>
+        const video = document.getElementById('bg-video');
+        video.playbackRate = 1;
+
+        function showDot() {
+            const dot = document.getElementById('simpleDot');
+            if (dot) {
+                dot.classList.add('show');
+            }
+        }
+        setTimeout(showDot, 18000); //time before dot shows
+    </script>
+    <div class="overlay"></div>
+</body>
+</html>
+
+

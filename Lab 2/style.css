@@ -1,0 +1,333 @@
+/* Ensure body/html take full height and remove default margin */
+html, body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;  /* prevents scrollbars from showing */
+    font-family: 'Orbitron';
+}
+
+/* Fullscreen background video */
+#bg-video{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%) scale(0.9);
+    object-fit: cover;
+    z-index: -2;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+.content{
+    position: relative;
+    z-index: 1;
+    color: white;
+    text-align: center;
+    margin-top: 10vh;
+    max-height: 95vh;
+    overflow-y: auto;
+}
+
+.home-page-content {
+    margin-top: 20vh !important; /* pushes the content down more */
+}
+
+h1{
+    font-size: 3.5rem;
+    font-weight: 700;
+}
+
+h2{
+    font-weight: 500;
+}
+
+/* p{
+
+}  */
+
+#titles {
+    display: inline-block;
+    min-height: 1.5em;
+    line-height: 1.5em;
+    border-right: 2px solid white;
+    animation: blink 0.7s step-end infinite;
+    white-space: nowrap;
+    vertical-align: bottom;
+    color: #e19dd9;
+    text-shadow:
+        0 0 20px #d9a2d2,
+        0 0 40px #e19dd9;
+}
+
+#aboutmecontent {
+    display: block;
+    margin-left: 5vw;
+    margin-right: 5vw;
+    text-align: left;
+    border-right: 2px solid white; /* blinking cursor */
+    animation: blink 0.7s step-end infinite;
+    white-space: pre-wrap;
+    color: #ffffff;
+    border-right: none !important;
+    animation: none !important;
+    text-shadow:
+        0 0 20px #adadad,
+        0 0 40px #737373;
+}
+
+@keyframes blink {
+    from, to { border-color: transparent; }
+    50% { border-color: white; }
+}
+
+.home-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.button-card{
+    display: inline-block;
+    padding: 15px 25px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.button-card:hover{
+    background: rgba(255,255,255,0.3);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    transform: translateY(-5px);
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Medium */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+/* SemiBold */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+/* Bold */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* ExtraBold */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+/* Black */
+@font-face {
+    font-family: 'Orbitron';
+    src: url('fonts/Orbitron-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+.projects-container{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+    gap: 30px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.project-details-wrapper {
+    flex: 1;
+    max-width: 70%; 
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.project-list{
+    max-height: 70vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 15%;
+}
+
+.project-details {
+    flex: 1;              
+    padding: 25px 30px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    max-width: 100%;
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1.7;              
+    word-break: break-word;
+    flex-direction: column;
+}
+
+/* Paragraph spacing */
+.project-details p {
+    margin-bottom: 1em;
+}
+
+/* Link styling */
+.project-details a {
+    color: #fff;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.project-details a:hover {
+    color: #e19dd9;
+}
+
+.project-cover {
+    margin-top: 20px;
+    width: 100%;
+    height: 250px;
+    border: 2px dashed rgba(255,255,255,0.5);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+    background: rgba(255,255,255,0.05);
+}
+
+/* Image */
+.project-image {
+    margin-top: 20px;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.projects-section {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.project-visuals {
+    display: flex;
+    gap: 20px;        /* space between cover and image */
+    flex-wrap: wrap;  /* wraps on smaller screens */
+}
+
+/* Make each visual take half the width */
+.project-visuals > .project-cover,
+.project-visuals > .project-image {
+    flex: 1 1 45%;    /* roughly half width, flexible */
+    height: 250px;    /* keep consistent height */
+}
+
+.neon-button-wrapper {
+    width: 1300px;
+    max-width: 100%; /* 1050px is the max */
+    margin-bottom: 20px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0; 
+}
+
+.neon-button {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    animation: neonScroll 60s linear infinite;
+    white-space: nowrap;
+    color: #e19dd9;
+    text-shadow:
+        0 0 5px #e19dd9,
+        0 0 10px #e19dd9,
+        0 0 20px #e19dd9,
+        0 0 40px #e19dd9;
+}
+
+@keyframes neonScroll {
+    0% {
+        transform: translateX(125%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.neon-button:hover {
+    color: #fff;
+    text-shadow:
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 30px #e19dd9,
+        0 0 40px #e19dd9;
+}
+
+.simple-dot {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    margin: 20px auto;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.5s ease;
+}
+
+.simple-dot.show {
+    opacity: 1;
+    transform: scale(1);
+}

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <video autoplay muted loop id="bg-video">
+        <source src="videos/projectsbackground.mp4" type="video/mp4">
+    </video>
+
+    <script>
+        const video = document.getElementById('bg-video');
+        video.playbackRate = 1;
+    </script>
+    <div class="overlay"></div>
+
+    <div class="content">
+        <div class="projects-section">
+            <div class="neon-button-wrapper" id="neon-container"></div>
+        </div>
+
+        <div class="projects-container">
+            <div class="project-list">
+                <a href="#" class="button-card" onclick="showProject('Project 1')">Philosophy Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 2')">Philosophy Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 3')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 4')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 5')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 6')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 7')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 8')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 9')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 10')">Future Project</a>
+            </div>
+            <div class="project-details-wrapper">
+                <div class="project-details" id="project-details">
+                    <h2>Select a project to see details</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projectData = {
+            "Project 1": {
+                title: "<a href='' target='_blank'>Philosophy Project</a>",
+                description: [""
+            ].join(" "),
+            cover: "Cover page preview will go here",
+            image: "images/"
+            }, 
+            "Project 2": {
+                title: "<a href='' target='_blank'>Philosophy Project</a>",
+                description: [""
+            ].join(" "),
+            cover: "Cover page preview will go here",
+            image: "images/"
+            }, 
+        };
+
+        function showProject(name) {
+            const details = document.getElementById('project-details');
+            const project = projectData[name];
+            details.innerHTML = `   
+                <h2>${project.title}</h2>
+                <div class="project-text">${project.description}</div>
+                <div class="project-visuals">
+                    <div class="project-cover">${project.cover}</div>
+                    <img class="project-image" src="${project.image}">
+                </div>
+            `;
+        }
+
+        const container = document.getElementById("neon-container");
+        const text = "Yes I have a cool neon sign styled home button, no it wasn't easy to make, but it's the little things that matter";
+        const repeatCount = 5; 
+
+        for (let i = 0; i < repeatCount; i++) {
+            const a = document.createElement("a");
+            a.href = "index.html";
+            a.className = "neon-button";
+            a.textContent = text;
+            container.appendChild(a);
+        }
+    </script>
+</body>
+</html>
