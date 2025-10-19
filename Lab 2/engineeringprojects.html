@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script src="transitions.js"></script>
 </head>
 <body>
     <video autoplay muted loop id="bg-video">
@@ -26,8 +26,8 @@
             <div class="project-list">
                 <a href="#" class="button-card" onclick="showProject('Project 1')">Violet</a>
                 <a href="#" class="button-card" onclick="showProject('Project 2')">Fractals</a>
-                <a href="#" class="button-card" onclick="showProject('Project 3')">Future Project</a>
-                <a href="#" class="button-card" onclick="showProject('Project 4')">Future Project</a>
+                <a href="#" class="button-card" onclick="showProject('Project 3')">Table</a>
+                <a href="#" class="button-card" onclick="showProject('Project 4')">List</a>
                 <a href="#" class="button-card" onclick="showProject('Project 5')">Future Project</a>
                 <a href="#" class="button-card" onclick="showProject('Project 6')">Future Project</a>
                 <a href="#" class="button-card" onclick="showProject('Project 7')">Future Project</a>
@@ -74,6 +74,58 @@
                 </div>`
             ,
             image: "images/fractalswithinmandelbrot.jpg"
+            },
+            "Project 3": {
+                title: "<a href='https://github.com/bluelijah/TableProject' target='_blank'>Table</a>",
+                description: [
+                    "This project demonstrates structured data with a table.<br><br>"
+                ].join(" "),
+                cover: `
+                    <div class="project-table">
+                        <h3>Project Highlights</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Feature 1</td>
+                                    <td>Interactive data visualizations</td>
+                                </tr>
+                                <tr>
+                                    <td>Feature 2</td>
+                                    <td>Responsive and user-friendly layout</td>
+                                </tr>
+                                <tr>
+                                    <td>Feature 3</td>
+                                    <td>Clean design matching website aesthetic</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `,
+                image:""
+            },
+            "Project 4": {
+                title: "<a href='https://github.com/bluelijah/TableProject' target='_blank'>List</a>",
+                description: [
+                    "This highlights key points in a list format.<br><br>"
+                ].join(" "),
+                cover: `
+                    <div class="project-list-style">
+                        <h3>Key Learnings</h3>
+                        <ul>
+                            <li>Planning data structure for readability</li>
+                            <li>Styling tables and lists for visual clarity</li>
+                            <li>Integrating structured content with existing website theme</li>
+                            <li>Writing semantic HTML and reusable CSS</li>
+                        </ul>
+                    </div>
+                `,
+                image:""
             },
         };
 

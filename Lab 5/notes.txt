@@ -1,0 +1,6 @@
+the API returns the entire grades database with each query as a dictionary object instead of just the requested student
+
+100 student limit - Response text (first 200 chars): <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>400 Bad Request</title>
+<h1>Bad Request</h1>
+<p>The system cannot support more than 100 grades. Delete a grade to add another one.</p>

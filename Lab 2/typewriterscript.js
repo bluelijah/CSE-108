@@ -43,7 +43,7 @@ function initTypewriter(targetId, texts, startDelay = 1000, loop = true, deleteM
 
         const lastChar = letter.slice(-1);
         if (lastChar === ".") {
-            speed = 1500; //pause duration after a period
+            speed = 2000; //pause duration after a period
         }
 
         if (deleteMode) {
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (document.getElementById("aboutmecontent")) {
         initTypewriter("aboutmecontent", [
-            "Hi! I'm Elijah, a lifelong learner who loves combining the study of humans, with the practice of computer science. I strive to bridge the disconnect between technology and humanity, attempting to make things inherently better in their experience and utility. Unfortunately, this means there are so many avenues of interest, that I have a hard time picking just one. But that's okay, because I believe the best innovations come from the intersection of multiple disciplines. Whether it's through coding, writing, cooking, or climbing, I approach each endeavor with curiosity and a desire to understand the world better."
-        ], 500, false, false, 20);
+            "Hi! I'm Elijah, a lifelong learner who loves combining the study of humans, with the practice of computer science. I strive to bridge the disconnect between technology and humanity, attempting to make things inherently better in their experience and utility. Unfortunately, this means there are so many avenues of interest, that I have a hard time picking just one. But that's okay, because I believe the best innovations come from the intersection of multiple disciplines. Whether it's through coding, writing, cooking, or climbing, I approach each endeavor with curiosity and a desire to understand the world better. Click the dots below to see more about me."
+        ], 1500, false, false, 20);
     }
 });

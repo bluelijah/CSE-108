@@ -1,23 +1,95 @@
-/* Ensure body/html take full height and remove default margin */
+/*ensure body/html take full height and remove default margin*/
+/*full-screen fade overlay for transitions*/
+.transition-overlay {
+    position: fixed;
+    inset: 0;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 1s ease; /*fade duration*/
+}
+
+/*trigger fade-out*/
+body.transitioning .transition-overlay {
+    opacity: 1;
+}
+
+/*fade-in animation on new page*/
+body.fade-in {
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+body.fade-in.visible {
+    opacity: 1;
+}
+
 html, body{
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;  /* prevents scrollbars from showing */
+    overflow: hidden;  /*prevents scrollbars from showing*/
     font-family: 'Orbitron';
+    background-color: #000;
 }
 
-/* Fullscreen background video */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /*starts hidden and fades to opacity 1*/
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/*when page is loaded*/
+body.loaded .navbar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Navbar links */
+.navbar-content {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #e19dd9;
+    box-shadow: 0 0 10px rgba(225, 157, 217, 0.6);
+}
+
 #bg-video{
     position: fixed;
     top: 50%;
     left: 50%;
     min-width: 100%;
     min-height: 100%;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%);
     object-fit: cover;
-    z-index: -2;
+    z-index: 0;
 }
 
 .overlay {
@@ -27,7 +99,7 @@ html, body{
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.7);
-    z-index: -1;
+    z-index: 0.1;
 }
 
 .content{
@@ -41,7 +113,7 @@ html, body{
 }
 
 .home-page-content {
-    margin-top: 20vh !important; /* pushes the content down more */
+    margin-top: 20vh !important; /*margin from top*/
 }
 
 h1{
@@ -52,10 +124,6 @@ h1{
 h2{
     font-weight: 500;
 }
-
-/* p{
-
-}  */
 
 #titles {
     display: inline-block;
@@ -93,6 +161,7 @@ h2{
 }
 
 .home-buttons{
+    opacity: 1;
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -178,17 +247,24 @@ h2{
 .project-details-wrapper {
     flex: 1;
     max-width: 70%; 
-    max-height: 70vh;
+    max-height: none;
     overflow-y: auto;
 }
 
 .project-list{
-    max-height: 70vh;
+    max-height: auto;
     overflow-y: auto;
+    overflow-x: auto;
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 15%;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.project-list::-webkit-scrollbar { 
+    display: none;
 }
 
 .project-details {
@@ -223,9 +299,10 @@ h2{
 }
 
 .project-cover {
+    flex: 1 1 100%;
     margin-top: 20px;
     width: 100%;
-    height: 250px;
+    height: auto;
     border: 2px dashed rgba(255,255,255,0.5);
     border-radius: 12px;
     display: flex;
@@ -265,7 +342,7 @@ h2{
 }
 
 .neon-button-wrapper {
-    width: 1300px;
+    width: calc(15% + 30px + 70%);
     max-width: 100%; /* 1050px is the max */
     margin-bottom: 20px;
     margin: 0 auto;
@@ -316,18 +393,105 @@ h2{
         0 0 40px #e19dd9;
 }
 
-.simple-dot {
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 50%;
-    margin: 20px auto;
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.5s ease;
+.dots-container {
+    position: fixed;
+    bottom: 20vh;
+    left: 0;
+    right: 0;
+    height: 30vh;
+    pointer-events: none;
+    z-index: 10;
 }
 
-.simple-dot.show {
-    opacity: 1;
+.staggered-dot {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0; 
+    transform: scale(0);
+    transition: all 0.8s ease;
+    box-shadow: 0 0 10px hsl(307, 53%, 75%, 2);
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.staggered-dot.show {
+    opacity: 0.8;
     transform: scale(1);
+}
+
+.staggered-dot:hover {
+    background: #e19dd9;
+    box-shadow: 0 0 15px rgba(225, 157, 217, 0.8);
+    transform: scale(1.2);
+}
+
+.staggered-dot:nth-child(1) { left: 15%; bottom: 60%; }
+.staggered-dot:nth-child(2) { left: 25%; bottom: 40%; }
+.staggered-dot:nth-child(3) { left: 35%; bottom: 70%; }
+.staggered-dot:nth-child(4) { left: 50%; bottom: 30%; }
+.staggered-dot:nth-child(5) { left: 65%; bottom: 55%; }
+.staggered-dot:nth-child(6) { left: 75%; bottom: 35%; }
+.staggered-dot:nth-child(7) { left: 85%; bottom: 65%; }
+
+.modal-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0;
+    z-index: 100;
+    transition: height 0.4s ease;
+    overflow: hidden;
+}
+
+.modal-overlay.open {
+    height: 60vh;
+}
+
+.modal-content {
+    position: absolute;
+    bottom: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75%;
+    height: 35vh;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px 20px 0 0;
+    padding: 30px;
+    color: white;
+    font-family: 'Orbitron';
+    overflow-y: auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal-title {
+    margin-top: 0;
+    color: #e19dd9;
+    text-shadow: 0 0 10px #e19dd9;
 }

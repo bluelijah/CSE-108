@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title> 
+    /* CSS Section */
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .calculator {
+            background: #2d3748;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid #4a5568;
+        }
+
+        .output {
+            background: #1a202c;
+            color: #fff;
+            font-size: 2.5rem;
+            text-align: right;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            min-height: 80px;
+            word-wrap: break-word;
+            border: 2px solid #4a5568;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            font-size: 1.5rem;
+            padding: 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .number {
+            background: #4a5568;
+            color: #fff;
+        }
+
+        .number:hover {
+            background: #5a6678;
+        }
+
+        .operator {
+            background: #f6ad55;
+            color: #2d3748;
+        }
+
+        .operator:hover {
+            background: #f6bd6d;
+        }
+
+        .operator.active {
+            background: #ed8936;
+            box-shadow: 0 0 0 3px #fbd38d;
+        }
+
+        .equals {
+            background: #48bb78;
+            color: #fff;
+        }
+
+        .equals:hover {
+            background: #5cca8c;
+        }
+
+        .clear {
+            background: #fc8181;
+            color: #fff;
+            grid-column: span 2;
+        }
+
+        .clear:hover {
+            background: #fc9595;
+        }
+
+        .zero {
+            grid-column: span 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="output" id="output">0</div>
+        <div class="buttons">
+            /* Buttons Section */
+            <button class="clear" onclick="clearCalc()">C</button>
+            <button class="operator" onclick="setOperator('/')" id="divide">÷</button>
+            <button class="operator" onclick="setOperator('*')" id="multiply">×</button>
+            
+            <button class="number" onclick="appendNumber('7')">7</button>
+            <button class="number" onclick="appendNumber('8')">8</button>
+            <button class="number" onclick="appendNumber('9')">9</button>
+            <button class="operator" onclick="setOperator('-')" id="subtract">−</button>
+            
+            <button class="number" onclick="appendNumber('4')">4</button>
+            <button class="number" onclick="appendNumber('5')">5</button>
+            <button class="number" onclick="appendNumber('6')">6</button>
+            <button class="operator" onclick="setOperator('+')" id="add">+</button>
+            
+            <button class="number" onclick="appendNumber('1')">1</button>
+            <button class="number" onclick="appendNumber('2')">2</button>
+            <button class="number" onclick="appendNumber('3')">3</button>
+            <button class="equals" onclick="calculate()" style="grid-row: span 2;">=</button>
+            
+            <button class="number zero" onclick="appendNumber('0')">0</button>
+            <button class="number" onclick="appendNumber('.')">.</button>
+            <button class="number" onclick="toggleSign()">+/−</button>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '0';
+        let previousInput = null;
+        let operator = null;
+        let shouldResetDisplay = false;
+        let lastOperator = null;
+        let lastOperand = null;
+
+        const output = document.getElementById('output');
+
+        function updateDisplay() {
+            output.textContent = currentInput;
+        }
+
+        function appendNumber(num) {
+            clearOperatorHighlight();
+            
+            if (shouldResetDisplay) {
+                currentInput = '0';
+                shouldResetDisplay = false;
+            }
+
+            if (num === '.') {
+                if (currentInput.includes('.')) return;
+                if (currentInput === '0' || currentInput === '') {
+                    currentInput = '0.';
+                } else {
+                    currentInput += '.';
+                }
+            } else {
+                if (currentInput === '0') {
+                    currentInput = num;
+                } else {
+                    currentInput += num;
+                }
+            }
+            
+            updateDisplay();
+        }
+
+        function setOperator(op) {
+            if (previousInput !== null && operator !== null && !shouldResetDisplay) {
+                calculate();
+            }
+            
+            previousInput = parseFloat(currentInput);
+            operator = op;
+            shouldResetDisplay = true;
+            
+            clearOperatorHighlight();
+            highlightOperator(op);
+        }
+
+        function calculate() {
+            if (operator === null) {
+                if (lastOperator !== null && lastOperand !== null) {
+                    previousInput = parseFloat(currentInput);
+                    operator = lastOperator;
+                    currentInput = lastOperand.toString();
+                } else {
+                    return;
+                }
+            }
+
+            const current = parseFloat(currentInput);
+            const previous = previousInput;
+
+            let result;
+            switch (operator) {
+                case '+':
+                    result = previous + current;
+                    break;
+                case '-':
+                    result = previous - current;
+                    break;
+                case '*':
+                    result = previous * current;
+                    break;
+                case '/':
+                    result = previous / current;
+                    break;
+                default:
+                    return;
+            }
+
+            lastOperator = operator;
+            lastOperand = current;
+
+            currentInput = result.toString();
+            operator = null;
+            previousInput = null;
+            shouldResetDisplay = true;
+            
+            clearOperatorHighlight();
+            updateDisplay();
+        }
+
+        function clearCalc() {
+            currentInput = '0';
+            previousInput = null;
+            operator = null;
+            shouldResetDisplay = false;
+            lastOperator = null;
+            lastOperand = null;
+            clearOperatorHighlight();
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            if (currentInput === '0') return;
+            
+            if (currentInput.startsWith('-')) {
+                currentInput = currentInput.substring(1);
+            } else {
+                currentInput = '-' + currentInput;
+            }
+            
+            updateDisplay();
+        }
+
+        function highlightOperator(op) {
+            const opMap = {
+                '+': 'add',
+                '-': 'subtract',
+                '*': 'multiply',
+                '/': 'divide'
+            };
+            
+            const buttonId = opMap[op];
+            if (buttonId) {
+                document.getElementById(buttonId).classList.add('active');
+            }
+        }
+
+        function clearOperatorHighlight() {
+            document.querySelectorAll('.operator').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>

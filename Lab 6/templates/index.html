@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grades Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section h2:hover {
+            color: #667eea;
+        }
+
+        .section h2 .toggle-icon {
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+
+        .section h2 .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 1;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            flex: 1;
+            min-width: 200px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.delete {
+            background: #e74c3c;
+        }
+
+        button.delete:hover {
+            background: #c0392b;
+        }
+
+        button.edit {
+            background: #f39c12;
+        }
+
+        button.edit:hover {
+            background: #d68910;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .student-result {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .student-result.hidden {
+            display: none;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Grades Management System</h1>
+            <p class="subtitle">CSE 106 - Lab 6 (Flask Edition)</p>
+        </header>
+
+        <div class="content">
+            <!-- Get Single Student Grade -->
+            <div class="section">
+                <h2>🔍 Get Student Grade</h2>
+                <div class="section-content">
+                    <div class="form-group">
+                        <input type="text" id="searchName" placeholder="Enter student name (case-sensitive)">
+                        <button onclick="getStudent()">Search</button>
+                    </div>
+                    <div id="searchMessage" class="message"></div>
+                    <div id="searchResult" class="student-result hidden"></div>
+                </div>
+            </div>
+
+            <!-- View All Students -->
+            <div class="section">
+                <h2 onclick="toggleSection('allStudentsContent')">
+                    👥 All Students
+                    <span class="toggle-icon" id="allStudentsToggle">▼</span>
+                </h2>
+                <div id="allStudentsContent" class="section-content">
+                    <button onclick="getAllStudents()">Refresh All Grades</button>
+                    <div id="allMessage" class="message"></div>
+                    <div id="allStudents"></div>
+                </div>
+            </div>
+
+            <!-- Add New Student -->
+            <div class="section">
+                <h2>➕ Add New Student</h2>
+                <div class="section-content">
+                    <div class="form-group">
+                        <input type="text" id="newName" placeholder="Student name">
+                        <input type="number" id="newGrade" placeholder="Grade" step="0.1" min="0" max="100">
+                        <button onclick="addStudent()">Add Student</button>
+                    </div>
+                    <div id="addMessage" class="message"></div>
+                </div>
+            </div>
+
+            <!-- Edit Student Grade -->
+            <div class="section">
+                <h2>✏️ Edit Student Grade</h2>
+                <div class="section-content">
+                    <div class="form-group">
+                        <input type="text" id="editName" placeholder="Student name (case-sensitive)">
+                        <input type="number" id="editGrade" placeholder="New grade" step="0.1" min="0" max="100">
+                        <button class="edit" onclick="editStudent()">Update Grade</button>
+                    </div>
+                    <div id="editMessage" class="message"></div>
+                </div>
+            </div>
+
+            <!-- Delete Student -->
+            <div class="section">
+                <h2>🗑️ Delete Student</h2>
+                <div class="section-content">
+                    <div class="form-group">
+                        <input type="text" id="deleteName" placeholder="Student name (case-sensitive)">
+                        <button class="delete" onclick="deleteStudent()">Delete Student</button>
+                    </div>
+                    <div id="deleteMessage" class="message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = ''; //MAKES ALL FETCH CALLS RELATIVE
+
+        function showMessage(elementId, message, isError = false) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = `message ${isError ? 'error' : 'success'} show`;
+            setTimeout(() => {
+                el.classList.remove('show');
+            }, 5000);
+        }
+
+        function encodeStudentName(name) {
+            return encodeURIComponent(name);
+        }
+
+        async function getStudent() {
+            const name = document.getElementById('searchName').value.trim();
+            if (!name) {
+                showMessage('searchMessage', 'Please enter a student name', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/grades/${encodeStudentName(name)}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    const resultDiv = document.getElementById('searchResult');
+                    resultDiv.innerHTML = `
+                        <strong>Name:</strong> ${name}<br>
+                        <strong>Grade:</strong> ${data[name]}
+                    `;
+                    resultDiv.classList.remove('hidden');
+                    showMessage('searchMessage', 'Student found successfully!');
+                } else {
+                    document.getElementById('searchResult').classList.add('hidden');
+                    showMessage('searchMessage', data.error || 'Student not found', true);
+                }
+            } catch (err) {
+                showMessage('searchMessage', 'Error fetching student data', true);
+            }
+        }
+
+        async function getAllStudents() {
+            const container = document.getElementById('allStudents');
+            container.innerHTML = '<div class="loading">Loading students...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/grades`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    let studentsArray = Object.entries(data).map(([name, grade]) => ({
+                        name: name,
+                        grade: grade
+                    }));
+                    
+                    if (studentsArray.length > 0) {
+                        let tableHTML = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Grade</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        studentsArray.forEach(student => {
+                            tableHTML += `
+                                <tr>
+                                    <td>${student.name}</td>
+                                    <td>${student.grade}</td>
+                                    <td class="actions">
+                                        <button class="edit" onclick="quickEdit('${student.name.replace(/'/g, "\\'")}', ${student.grade})">Edit</button>
+                                        <button class="delete" onclick="quickDelete('${student.name.replace(/'/g, "\\'")}')">Delete</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+
+                        tableHTML += '</tbody></table>';
+                        container.innerHTML = tableHTML;
+                        showMessage('allMessage', `Loaded ${studentsArray.length} students`);
+                    } else {
+                        container.innerHTML = '<p>No students found</p>';
+                        showMessage('allMessage', 'No students in the database', true);
+                    }
+                } else {
+                    container.innerHTML = '<p>Error loading students</p>';
+                    showMessage('allMessage', 'Error fetching student data', true);
+                }
+            } catch (err) {
+                container.innerHTML = '<p>Error loading students</p>';
+                showMessage('allMessage', 'Error fetching student data', true);
+            }
+        }
+
+        async function addStudent() {
+            const name = document.getElementById('newName').value.trim();
+            const grade = parseFloat(document.getElementById('newGrade').value);
+
+            if (!name || isNaN(grade)) {
+                showMessage('addMessage', 'Please enter both name and grade', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/grades`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, grade })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('addMessage', `Student ${name} added successfully with grade ${grade}!`);
+                    document.getElementById('newName').value = '';
+                    document.getElementById('newGrade').value = '';
+                    getAllStudents();
+                } else {
+                    showMessage('addMessage', data.error || 'Error adding student', true);
+                }
+            } catch (err) {
+                showMessage('addMessage', `Error adding student: ${err.message}`, true);
+            }
+        }
+
+        async function editStudent() {
+            const name = document.getElementById('editName').value.trim();
+            const grade = parseFloat(document.getElementById('editGrade').value);
+
+            if (!name || isNaN(grade)) {
+                showMessage('editMessage', 'Please enter both name and grade', true);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/grades/${encodeStudentName(name)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ grade })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('editMessage', `Grade updated for ${name}!`);
+                    document.getElementById('editName').value = '';
+                    document.getElementById('editGrade').value = '';
+                    getAllStudents();
+                } else {
+                    showMessage('editMessage', data.error || 'Error updating grade', true);
+                }
+            } catch (err) {
+                showMessage('editMessage', 'Error updating grade', true);
+            }
+        }
+
+        async function deleteStudent() {
+            const name = document.getElementById('deleteName').value.trim();
+
+            if (!name) {
+                showMessage('deleteMessage', 'Please enter a student name', true);
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete ${name}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/grades/${encodeStudentName(name)}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage('deleteMessage', `Student ${name} deleted successfully!`);
+                    document.getElementById('deleteName').value = '';
+                    getAllStudents();
+                } else {
+                    showMessage('deleteMessage', data.error || 'Error deleting student', true);
+                }
+            } catch (err) {
+                showMessage('deleteMessage', 'Error deleting student', true);
+            }
+        }
+
+        function quickEdit(name, currentGrade) {
+            document.getElementById('editName').value = name;
+            document.getElementById('editGrade').value = currentGrade;
+            document.getElementById('editName').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function quickDelete(name) {
+            document.getElementById('deleteName').value = name;
+            deleteStudent();
+        }
+
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const toggleIcon = document.getElementById(sectionId.replace('Content', 'Toggle'));
+            
+            content.classList.toggle('collapsed');
+            toggleIcon.classList.toggle('collapsed');
+        }
+
+        // Load all students on page load
+        window.onload = getAllStudents;
+    </script>
+</body>
+</html>
